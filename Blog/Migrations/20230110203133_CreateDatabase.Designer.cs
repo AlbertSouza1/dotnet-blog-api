@@ -10,7 +10,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Blog.Migrations
 {
     [DbContext(typeof(BlogDataContext))]
-    [Migration("20230110183958_CreateDatabase")]
+    [Migration("20230110203133_CreateDatabase")]
     partial class CreateDatabase
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -31,13 +31,13 @@ namespace Blog.Migrations
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(80)
-                        .HasColumnType("VARCHAR")
+                        .HasColumnType("Varchar")
                         .HasColumnName("Name");
 
                     b.Property<string>("Slug")
                         .IsRequired()
                         .HasMaxLength(80)
-                        .HasColumnType("VARCHAR")
+                        .HasColumnType("Varchar")
                         .HasColumnName("Slug");
 
                     b.HasKey("Id");
@@ -70,7 +70,7 @@ namespace Blog.Migrations
                     b.Property<DateTime>("LastUpdateDate")
                         .ValueGeneratedOnAdd()
                         .HasMaxLength(60)
-                        .HasColumnType("TIMESTAMP")
+                        .HasColumnType("Timestamp")
                         .HasColumnName("LastUpdateDate")
                         .HasDefaultValueSql("CURRENT_DATE");
 
@@ -150,7 +150,7 @@ namespace Blog.Migrations
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(80)
-                        .HasColumnType("VARCHAR")
+                        .HasColumnType("Varchar")
                         .HasColumnName("Name");
 
                     b.Property<string>("PasswordHash")
@@ -159,7 +159,7 @@ namespace Blog.Migrations
                     b.Property<string>("Slug")
                         .IsRequired()
                         .HasMaxLength(80)
-                        .HasColumnType("VARCHAR")
+                        .HasColumnType("Varchar")
                         .HasColumnName("Slug");
 
                     b.HasKey("Id");

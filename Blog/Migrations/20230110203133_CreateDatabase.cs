@@ -14,8 +14,8 @@ namespace Blog.Migrations
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    Name = table.Column<string>(type: "VARCHAR", maxLength: 80, nullable: false),
-                    Slug = table.Column<string>(type: "VARCHAR", maxLength: 80, nullable: false)
+                    Name = table.Column<string>(type: "Varchar", maxLength: 80, nullable: false),
+                    Slug = table.Column<string>(type: "Varchar", maxLength: 80, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -56,11 +56,11 @@ namespace Blog.Migrations
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    Name = table.Column<string>(type: "VARCHAR", maxLength: 80, nullable: false),
+                    Name = table.Column<string>(type: "Varchar", maxLength: 80, nullable: false),
                     Email = table.Column<string>(type: "text", nullable: true),
                     PasswordHash = table.Column<string>(type: "text", nullable: true),
                     Image = table.Column<string>(type: "text", nullable: true),
-                    Slug = table.Column<string>(type: "VARCHAR", maxLength: 80, nullable: false),
+                    Slug = table.Column<string>(type: "Varchar", maxLength: 80, nullable: false),
                     Bio = table.Column<string>(type: "text", nullable: true)
                 },
                 constraints: table =>
@@ -79,7 +79,7 @@ namespace Blog.Migrations
                     Body = table.Column<string>(type: "text", nullable: true),
                     Slug = table.Column<string>(type: "text", nullable: true),
                     CreateDate = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
-                    LastUpdateDate = table.Column<DateTime>(type: "TIMESTAMP", maxLength: 60, nullable: false, defaultValueSql: "CURRENT_DATE"),
+                    LastUpdateDate = table.Column<DateTime>(type: "Timestamp", maxLength: 60, nullable: false, defaultValueSql: "CURRENT_DATE"),
                     CategoryId = table.Column<int>(type: "integer", nullable: true),
                     AuthorId = table.Column<int>(type: "integer", nullable: true)
                 },

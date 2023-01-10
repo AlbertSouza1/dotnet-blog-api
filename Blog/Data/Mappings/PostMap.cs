@@ -2,6 +2,7 @@
 using Blog.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using PgsqlDataTypes;
 
 namespace Blog.Data.Mappings
 {
@@ -24,7 +25,7 @@ namespace Blog.Data.Mappings
             builder.Property(x => x.LastUpdateDate)
                 .IsRequired()
                 .HasColumnName("LastUpdateDate")
-                .HasColumnType("TIMESTAMP")
+                .HasColumnType(EPgsqlDataTypes.Timestamp.ToString())
                 .HasMaxLength(60)
                 .HasDefaultValueSql("CURRENT_DATE");
             // .HasDefaultValue(DateTime.Now.ToUniversalTime());

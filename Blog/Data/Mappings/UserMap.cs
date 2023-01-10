@@ -2,6 +2,7 @@
 using Blog.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using PgsqlDataTypes;
 
 namespace Blog.Data.Mappings
 {
@@ -24,7 +25,7 @@ namespace Blog.Data.Mappings
             builder.Property(x => x.Name)
                 .IsRequired()
                 .HasColumnName("Name")
-                .HasColumnType("VARCHAR")
+                .HasColumnType(EPgsqlDataTypes.Varchar.ToString())
                 .HasMaxLength(80);
 
             builder.Property(x => x.Bio);
@@ -35,7 +36,7 @@ namespace Blog.Data.Mappings
             builder.Property(x => x.Slug)
                 .IsRequired()
                 .HasColumnName("Slug")
-                .HasColumnType("VARCHAR")
+                .HasColumnType(EPgsqlDataTypes.Varchar.ToString())
                 .HasMaxLength(80);
 
             // Índices
