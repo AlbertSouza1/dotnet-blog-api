@@ -1,3 +1,4 @@
+using System;
 using Blog.Data.Mappings;
 using Blog.Models;
 using Microsoft.EntityFrameworkCore;
@@ -15,7 +16,7 @@ namespace Blog.Data
         // public DbSet<UserRole> UserRoles { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder options)
-            => options.UseSqlServer("Server=localhost,1433;Database=FluentBlog;User ID=sa;Password=1q2w3e4r@#$");
+            => options.UseNpgsql(Environment.GetEnvironmentVariable("SUPABASE_CONNECTION_STRING"));
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
