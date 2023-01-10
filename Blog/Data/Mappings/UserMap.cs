@@ -24,7 +24,7 @@ namespace Blog.Data.Mappings
             builder.Property(x => x.Name)
                 .IsRequired()
                 .HasColumnName("Name")
-                .HasColumnType("NVARCHAR")
+                .HasColumnType("VARCHAR")
                 .HasMaxLength(80);
 
             builder.Property(x => x.Bio);

@@ -15,8 +15,7 @@ namespace Blog.Data
         public DbSet<User> Users { get; set; }
         // public DbSet<UserRole> UserRoles { get; set; }
 
-        protected override void OnConfiguring(DbContextOptionsBuilder options)
-            => options.UseNpgsql(Environment.GetEnvironmentVariable("SUPABASE_CONNECTION_STRING"));
+        public BlogDataContext(DbContextOptions<BlogDataContext> options) : base(options) { }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

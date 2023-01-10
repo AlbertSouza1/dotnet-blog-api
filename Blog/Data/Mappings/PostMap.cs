@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Blog.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -25,9 +24,9 @@ namespace Blog.Data.Mappings
             builder.Property(x => x.LastUpdateDate)
                 .IsRequired()
                 .HasColumnName("LastUpdateDate")
-                .HasColumnType("SMALLDATETIME")
+                .HasColumnType("TIMESTAMP")
                 .HasMaxLength(60)
-                .HasDefaultValueSql("GETDATE()");
+                .HasDefaultValueSql("CURRENT_DATE");
             // .HasDefaultValue(DateTime.Now.ToUniversalTime());
 
             // Índices
