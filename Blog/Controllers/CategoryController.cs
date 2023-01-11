@@ -21,7 +21,7 @@ namespace Blog.Controllers
         [HttpGet("{id:int}")]
         public async Task<IActionResult> GetByIdAsync([FromServices] BlogDataContext context, [FromRoute] int id)
         {
-            var category = await context.Categories.FirstOrDefaultAsync();
+            var category = await context.Categories.FirstOrDefaultAsync(x => x.Id == id);
 
             if (category is null)
                 return NotFound(new { message = $"The category of ID {id} was not found." });
