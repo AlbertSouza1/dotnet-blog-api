@@ -1,4 +1,4 @@
-using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Blog.Data;
 using Blog.Models;
@@ -14,7 +14,7 @@ namespace Blog.Controllers
         [HttpGet("")]
         public async Task<IActionResult> GetAsync([FromServices] BlogDataContext context)
         {
-            var categories = await context.Categories.ToListAsync();
+            var categories = await context.Categories.OrderBy(x => x.Id).ToListAsync();
             return Ok(categories);
         }
 
