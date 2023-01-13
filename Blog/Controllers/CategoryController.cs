@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Blog.Data;
@@ -32,15 +33,26 @@ namespace Blog.Controllers
         [HttpPost("create")]
         public async Task<IActionResult> CreateAsync([FromServices] BlogDataContext context, [FromBody] Category category)
         {
-            if (!category.IsValid())
-                return BadRequest(new { message = "Failed to convert the body Json to a Category. Make sure the given Json is in the corret format." });
+            try
+            {
+                if (!category.IsValid())
+                    return BadRequest(new { message = "Failed to convert the body Json to a Category. Make sure the given Json is in the corret format." });
 
-            await context.Categories.AddAsync(category);
-            await context.SaveChangesAsync();
+                await context.Categories.AddAsync(category);
+                await context.SaveChangesAsync();
 
-            return CreatedAtAction(actionName: nameof(GetByIdAsync),
-                                   routeValues: new { id = category.Id },
-                                   value: category);
+                return CreatedAtAction(actionName: nameof(GetByIdAsync),
+                                       routeValues: new { id = category.Id },
+                                       value: category);
+            }
+            catch (DbUpdateException)
+            {
+                return BadRequest("Impossible to create the category.");
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, "Internal error.");
+            }
         }
 
         [HttpPut("update/{id:int}")]
