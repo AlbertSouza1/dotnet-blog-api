@@ -54,14 +54,14 @@ namespace Blog.Controllers
         }
 
         [HttpPost("create")]
-        public async Task<IActionResult> CreateAsync([FromServices] BlogDataContext context, [FromBody] CreateCategoryViewModel viewModel)
+        public async Task<IActionResult> CreateAsync([FromServices] BlogDataContext context, [FromBody] EditorCategoryViewModel viewModel)
         {
             try
             {
-                var category = new Category(id: 0, viewModel.Name, viewModel.Slug.ToLower());
+                if (!viewModel.IsValid())
+                    return BadRequest(new { message = "Failed to convert the body Json to a Category. Make sure the given Json is in the correct format." });
 
-                if (!category.IsValid())
-                    return BadRequest(new { message = "Failed to convert the body Json to a Category. Make sure the given Json is in the corret format." });
+                var category = new Category(id: 0, viewModel.Name, viewModel.Slug.ToLower());
 
                 await context.Categories.AddAsync(category);
                 await context.SaveChangesAsync();
@@ -81,20 +81,20 @@ namespace Blog.Controllers
         }
 
         [HttpPut("update/{id:int}")]
-        public async Task<IActionResult> UpdateAsync([FromServices] BlogDataContext context, [FromRoute] int id, [FromBody] Category category)
+        public async Task<IActionResult> UpdateAsync([FromServices] BlogDataContext context, [FromRoute] int id, [FromBody] EditorCategoryViewModel viewModel)
         {
             try
             {
-                if (!category.IsValid())
-                    return BadRequest(new { message = $"Failed to convert the body Json to a Category. Make sure the given Json is in the corret format." });
+                if (!viewModel.IsValid())
+                    return BadRequest(new { message = $"Failed to convert the body Json to a Category. Make sure the given Json is in the correct format." });
 
                 var currentCategory = await context.Categories.FirstOrDefaultAsync(x => x.Id == id);
 
                 if (currentCategory is null)
                     return NotFound(new { message = $"The category of Id {id} was not found. Make sure you pass the correct ID in route parameter." });
 
-                currentCategory.Name = category.Name;
-                currentCategory.Slug = category.Slug;
+                currentCategory.Name = viewModel.Name;
+                currentCategory.Slug = viewModel.Slug;
 
                 context.Categories.Update(currentCategory);
 
