@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Blog.Data;
 using Blog.Models;
+using Blog.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -53,10 +54,12 @@ namespace Blog.Controllers
         }
 
         [HttpPost("create")]
-        public async Task<IActionResult> CreateAsync([FromServices] BlogDataContext context, [FromBody] Category category)
+        public async Task<IActionResult> CreateAsync([FromServices] BlogDataContext context, [FromBody] CreateCategoryViewModel viewModel)
         {
             try
             {
+                var category = new Category(id: 0, viewModel.Name, viewModel.Slug.ToLower());
+
                 if (!category.IsValid())
                     return BadRequest(new { message = "Failed to convert the body Json to a Category. Make sure the given Json is in the corret format." });
 
