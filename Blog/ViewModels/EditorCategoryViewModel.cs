@@ -1,16 +1,12 @@
+using System.ComponentModel.DataAnnotations;
+
 namespace Blog.ViewModels
 {
     public class EditorCategoryViewModel
     {
+        [Required]
         public string Name { get; set; }
+        [Required]
         public string Slug { get; set; }
-
-        public bool IsValid()
-        {
-            if (string.IsNullOrEmpty(Name))
-                return false;
-
-            return !string.IsNullOrEmpty(Slug);
-        }
     }
 }

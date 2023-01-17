@@ -58,9 +58,6 @@ namespace Blog.Controllers
         {
             try
             {
-                if (!viewModel.IsValid())
-                    return BadRequest(new { message = "Failed to convert the body Json to a Category. Make sure the given Json is in the correct format." });
-
                 var category = new Category(id: 0, viewModel.Name, viewModel.Slug.ToLower());
 
                 await context.Categories.AddAsync(category);
@@ -85,9 +82,6 @@ namespace Blog.Controllers
         {
             try
             {
-                if (!viewModel.IsValid())
-                    return BadRequest(new { message = $"Failed to convert the body Json to a Category. Make sure the given Json is in the correct format." });
-
                 var currentCategory = await context.Categories.FirstOrDefaultAsync(x => x.Id == id);
 
                 if (currentCategory is null)
