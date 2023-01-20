@@ -1,7 +1,9 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Blog.Data;
+using Blog.Extensions;
 using Blog.Models;
 using Blog.ViewModels;
 using Microsoft.AspNetCore.Mvc;
@@ -19,15 +21,11 @@ namespace Blog.Controllers
             try
             {
                 var categories = await context.Categories.OrderBy(x => x.Id).ToListAsync();
-                return Ok(categories);
+                return Ok(new ResultViewModel<List<Category>>(categories));
             }
-            catch (DbUpdateException)
+            catch
             {
-                return BadRequest("Impossible to create the category.");
-            }
-            catch (Exception)
-            {
-                return StatusCode(500, "Internal error.");
+                return StatusCode(500, new ResultViewModel<List<Category>>(error: "Internal error."));
             }
         }
 
@@ -39,17 +37,13 @@ namespace Blog.Controllers
                 var category = await context.Categories.FirstOrDefaultAsync(x => x.Id == id);
 
                 if (category is null)
-                    return NotFound(new { message = $"The category of ID {id} was not found." });
+                    return NotFound(new ResultViewModel<Category>(error: $"The category of ID {id} was not found."));
 
-                return Ok(category);
+                return Ok(new ResultViewModel<Category>(category));
             }
-            catch (DbUpdateException)
+            catch
             {
-                return BadRequest("Impossible to get the category.");
-            }
-            catch (Exception)
-            {
-                return StatusCode(500, "Internal error.");
+                return StatusCode(500, new ResultViewModel<Category>(error: "Internal error."));
             }
         }
 
@@ -58,6 +52,9 @@ namespace Blog.Controllers
         {
             try
             {
+                if (!ModelState.IsValid)
+                    return BadRequest(new ResultViewModel<List<Category>>(errors: ModelState.GetErrors()));
+
                 var category = new Category(id: 0, viewModel.Name, viewModel.Slug.ToLower());
 
                 await context.Categories.AddAsync(category);
@@ -65,15 +62,11 @@ namespace Blog.Controllers
 
                 return CreatedAtAction(actionName: nameof(GetByIdAsync),
                                        routeValues: new { id = category.Id },
-                                       value: category);
+                                       value: new ResultViewModel<Category>(category));
             }
-            catch (DbUpdateException)
+            catch
             {
-                return BadRequest("Impossible to create the category.");
-            }
-            catch (Exception)
-            {
-                return StatusCode(500, "Internal error.");
+                return StatusCode(500, new ResultViewModel<Category>(error: "Internal error."));
             }
         }
 

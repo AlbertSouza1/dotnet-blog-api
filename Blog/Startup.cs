@@ -22,7 +22,11 @@ namespace Blog
 
             services.AddDbContext<BlogDataContext>(options => options.UseNpgsql(Environment.GetEnvironmentVariable("SUPABASE_CONNECTION_STRING")));
 
-            services.AddControllers();
+            services.AddControllers()
+            .ConfigureApiBehaviorOptions(options =>
+            {
+                options.SuppressModelStateInvalidFilter = true;
+            });
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
