@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -75,29 +74,28 @@ namespace Blog.Controllers
         {
             try
             {
-                var currentCategory = await context.Categories.FirstOrDefaultAsync(x => x.Id == id);
+                if (!ModelState.IsValid)
+                    return BadRequest(new ResultViewModel<List<Category>>(errors: ModelState.GetErrors()));
 
-                if (currentCategory is null)
-                    return NotFound(new { message = $"The category of Id {id} was not found. Make sure you pass the correct ID in route parameter." });
+                var category = await context.Categories.FirstOrDefaultAsync(x => x.Id == id);
 
-                currentCategory.Name = viewModel.Name;
-                currentCategory.Slug = viewModel.Slug;
+                if (category is null)
+                    return NotFound(new ResultViewModel<Category>(error: $"The category of ID {id} was not found."));
 
-                context.Categories.Update(currentCategory);
+                category.Name = viewModel.Name;
+                category.Slug = viewModel.Slug;
+
+                context.Categories.Update(category);
 
                 await context.SaveChangesAsync();
 
                 return CreatedAtAction(actionName: nameof(GetByIdAsync),
-                                       routeValues: new { id = currentCategory.Id },
-                                       value: currentCategory);
+                                       routeValues: new { id = category.Id },
+                                       value: new ResultViewModel<Category>(category));
             }
-            catch (DbUpdateException)
+            catch
             {
-                return BadRequest("Impossible to update the category.");
-            }
-            catch (Exception)
-            {
-                return StatusCode(500, "Internal error.");
+                return StatusCode(500, new ResultViewModel<Category>(error: "Internal error."));
             }
         }
 
@@ -109,21 +107,17 @@ namespace Blog.Controllers
                 var category = await context.Categories.FirstOrDefaultAsync(x => x.Id == id);
 
                 if (category is null)
-                    return NotFound(new { message = $"The category of Id {id} was not found. Make sure you pass the correct ID in route parameter." });
+                    return NotFound(new ResultViewModel<Category>(error: $"The category of ID {id} was not found."));
 
                 context.Categories.Remove(category);
 
                 await context.SaveChangesAsync();
 
-                return Ok(new { message = "The category was successfully deleted." });
+                return Ok(new ResultViewModel<string>(data: "The category was successfully deleted."));
             }
-            catch (DbUpdateException)
+            catch
             {
-                return BadRequest("Impossible to delete the category.");
-            }
-            catch (Exception)
-            {
-                return StatusCode(500, "Internal error.");
+                return StatusCode(500, new ResultViewModel<Category>(error: "Internal error."));
             }
         }
     }
