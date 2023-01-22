@@ -19,13 +19,5 @@ namespace Blog.Models
         public string Slug { get; set; }
 
         public IList<Post> Posts { get; set; }
-
-        public bool IsValid()
-        {
-            if (string.IsNullOrEmpty(Name))
-                return false;
-
-            return !string.IsNullOrEmpty(Slug);
-        }
     }
 }
