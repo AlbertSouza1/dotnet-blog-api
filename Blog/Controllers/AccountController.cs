@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Blog.Data;
@@ -60,11 +61,32 @@ namespace Blog.Controllers
         }
 
         [HttpPost("v1/login")]
-        public IActionResult Login()
+        public async Task<IActionResult> Login([FromBody] LoginViewModel model, [FromServices] BlogDataContext context, [FromServices] TokenService tokenService)
         {
-            var token = _tokenService.GenerateToken(null);
+            if (!ModelState.IsValid)
+                return BadRequest(new ResultViewModel<List<string>>(ModelState.GetErrors()));
 
-            return Ok(token);
+            try
+            {
+                var user = await context.Users
+                        .AsNoTracking()
+                        .Include(x => x.Roles)
+                        .FirstOrDefaultAsync(x => x.Email == model.Email);
+
+                if (user is null)
+                    return StatusCode(401, new ResultViewModel<string>(error: "Email or password invalid."));
+
+                if (!PasswordHasher.Verify(user.PasswordHash, model.Password))
+                    return StatusCode(401, new ResultViewModel<string>(error: "Email or password invalid."));
+
+                var token = _tokenService.GenerateToken(user);
+
+                return Ok(new ResultViewModel<string>(data: token));
+            }
+            catch
+            {
+                return StatusCode(500, new ResultViewModel<string>(error: "Internal error."));
+            }
         }
 
         [HttpGet("v1/users/{id}")]
