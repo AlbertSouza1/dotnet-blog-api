@@ -10,7 +10,7 @@ namespace Blog.Attributes
     {
         public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
         {
-            if (!context.HttpContext.Request.Query.TryGetValue(Environment.GetEnvironmentVariable("APIKEYNAME"), out var extractedApiKey))
+            if (!context.HttpContext.Request.Query.TryGetValue(Environment.GetEnvironmentVariable("API_KEY_NAME"), out var extractedApiKey))
             {
                 context.Result = new ContentResult()
                 {
@@ -21,7 +21,7 @@ namespace Blog.Attributes
                 return;
             }
 
-            if (!Environment.GetEnvironmentVariable("APIKEY").Equals(extractedApiKey))
+            if (!Environment.GetEnvironmentVariable("API_KEY").Equals(extractedApiKey))
             {
                 context.Result = new ContentResult()
                 {
