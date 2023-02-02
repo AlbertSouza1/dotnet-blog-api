@@ -25,6 +25,7 @@ namespace Blog
 
             services.AddDbContext<BlogDataContext>(options => options.UseNpgsql(Environment.GetEnvironmentVariable("SUPABASE_CONNECTION_STRING")));
             services.AddTransient<TokenService>();
+            services.AddTransient<EmailService>();
 
             services.AddControllers()
             .ConfigureApiBehaviorOptions(options =>

@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Blog.Data;
+using Blog.DTOs;
 using Blog.Extensions;
 using Blog.Models;
 using Blog.Services;
@@ -22,7 +23,7 @@ namespace Blog.Controllers
             => _tokenService = tokenService;
 
         [HttpPost("v1/users/register")]
-        public async Task<IActionResult> CreateAccount([FromBody] RegisterViewModel model, [FromServices] BlogDataContext context)
+        public async Task<IActionResult> CreateAccount([FromBody] RegisterViewModel model, [FromServices] BlogDataContext context, [FromServices] EmailService emailService)
         {
             if (!ModelState.IsValid)
                 return BadRequest(new ResultViewModel<string>(ModelState.GetErrors()));
@@ -41,6 +42,12 @@ namespace Blog.Controllers
             {
                 await context.Users.AddAsync(user);
                 await context.SaveChangesAsync();
+
+                var emailData = new EmailDataDTO(toEmail: user.Email,
+                                                 toName: user.Name,
+                                                 subject: "Welcome to our blog!",
+                                                 body: $"Your password is <strong>{password}.</strong>");
+                emailService.Send(emailData);
 
                 return CreatedAtAction(actionName: nameof(GetUserName),
                                            routeValues: new { id = user.Id },
