@@ -7,6 +7,7 @@ using Blog.Extensions;
 using Blog.Models;
 using Blog.Services;
 using Blog.ViewModels;
+using Blog.ViewModels.Accounts;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -96,6 +97,7 @@ namespace Blog.Controllers
             }
         }
 
+        [Authorize]
         [HttpGet("v1/users/{id}")]
         public IActionResult GetUserName([FromServices] BlogDataContext context, [FromRoute] int id)
         {

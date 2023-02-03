@@ -1,13 +1,12 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace Blog.ViewModels
+namespace Blog.ViewModels.Categories
 {
-    public class RegisterViewModel
+    public class EditorCategoryViewModel
     {
         [Required]
         public string Name { get; set; }
         [Required]
-        [EmailAddress]
-        public string Email { get; set; }
+        public string Slug { get; set; }
     }
 }
