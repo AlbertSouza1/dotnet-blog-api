@@ -1,5 +1,7 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Blog.Data;
 using Blog.DTOs;
@@ -112,6 +114,38 @@ namespace Blog.Controllers
             catch
             {
                 return StatusCode(500, new ResultViewModel<User>(error: "Internal error."));
+            }
+        }
+
+        [Authorize]
+        [HttpPost("v1/users/upload-image")]
+        public async Task<IActionResult> UploadImage([FromBody] UploadImageViewModel viewModel, [FromServices] BlogDataContext context)
+        {
+            var fileName = $"{Guid.NewGuid().ToString()}.jpg";
+            var data = new Regex(@"^data:imageV[a-z]+;base64,")
+            .Replace(viewModel.Base64Image, "");
+
+            var bytes = Convert.FromBase64String(data);
+
+            try
+            {
+                await System.IO.File.WriteAllBytesAsync($"wwwroot/images/{fileName}", bytes);
+
+                var user = await context.Users.FirstOrDefaultAsync(x => x.Email.Equals(User.Identity.Name));
+
+                if (user is null)
+                    return NotFound(new ResultViewModel<User>(error: "User not found."));
+
+                user.Image = $"https://localhost:5001/images/{fileName}";
+
+                context.Users.Update(user);
+                await context.SaveChangesAsync();
+
+                return Ok(new ResultViewModel<string>(data: "User image updated successfully."));
+            }
+            catch
+            {
+                return StatusCode(500, new ResultViewModel<string>(data: "Internal error."));
             }
         }
     }
