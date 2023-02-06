@@ -1,5 +1,6 @@
 using System;
 using System.Text;
+using System.Text.Json.Serialization;
 using Blog.Data;
 using Blog.Services;
 using Blog.Settings;
@@ -31,6 +32,11 @@ namespace Blog
             .ConfigureApiBehaviorOptions(options =>
             {
                 options.SuppressModelStateInvalidFilter = true;
+            })
+            .AddJsonOptions(x =>
+            {
+                // x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycle;
+                x.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingDefault;
             });
 
             ConfigureAuthentication(services);
