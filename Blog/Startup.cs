@@ -36,6 +36,7 @@ namespace Blog
             .AddJsonOptions(x =>
             {
                 // x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycle;
+                //x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve;
                 x.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingDefault;
             });
 
