@@ -31,16 +31,9 @@ namespace Blog
             services.AddMemoryCache();
 
             services.AddControllers()
-            .ConfigureApiBehaviorOptions(options =>
-            {
-                options.SuppressModelStateInvalidFilter = true;
-            })
-            .AddJsonOptions(x =>
-            {
-                // x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycle;
-                //x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve;
-                x.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingDefault;
-            });
+                    .AddNewtonsoftJson(x => x.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore)
+                    .ConfigureApiBehaviorOptions(options => options.SuppressModelStateInvalidFilter = true)
+                    .AddJsonOptions(x => x.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingDefault);
 
             ConfigureAuthentication(services);
         }
