@@ -9,6 +9,7 @@ using Blog.ViewModels.Categories;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace Blog.Controllers
 {
@@ -17,11 +18,17 @@ namespace Blog.Controllers
     public class CategoryController : ControllerBase
     {
         [HttpGet("")]
-        public async Task<IActionResult> GetAsync([FromServices] BlogDataContext context)
+        public async Task<IActionResult> GetAsync([FromServices] BlogDataContext context, [FromServices] IMemoryCache cache)
         {
             try
             {
-                var categories = await context.Categories.OrderBy(x => x.Id).ToListAsync();
+                var categories = await cache.GetOrCreate("CategoriesCache", entry =>
+                {
+                    entry.AbsoluteExpirationRelativeToNow = System.TimeSpan.FromHours(1);
+
+                    return context.Categories.ToListAsync();
+                });
+
                 return Ok(new ResultViewModel<List<Category>>(categories));
             }
             catch

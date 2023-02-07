@@ -28,6 +28,8 @@ namespace Blog
             services.AddTransient<TokenService>();
             services.AddTransient<EmailService>();
 
+            services.AddMemoryCache();
+
             services.AddControllers()
             .ConfigureApiBehaviorOptions(options =>
             {
