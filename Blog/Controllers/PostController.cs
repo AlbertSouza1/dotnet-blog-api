@@ -60,18 +60,9 @@ namespace Blog.Controllers
                     .Include(x => x.Author)
                     .ThenInclude(x => x.Roles)
                     .Include(x => x.Category)
-                    .Select(x => new ListPostsViewModel
-                    {
-                        Id = x.Id,
-                        Title = x.Title,
-                        Slug = x.Slug,
-                        LastUpdateDate = x.LastUpdateDate,
-                        Category = x.Category.Name,
-                        Author = $"{x.Author.Name} ({x.Author.Email})"
-                    })
                     .FirstOrDefaultAsync(x => x.Id == id);
 
-                return Ok(new ResultViewModel<ListPostsViewModel>(post));
+                return Ok(new ResultViewModel<Blog.Models.Post>(post));
             }
             catch
             {
