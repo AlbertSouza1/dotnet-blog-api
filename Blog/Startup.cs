@@ -3,16 +3,15 @@ using System.Text;
 using System.Text.Json.Serialization;
 using Blog.Data;
 using Blog.Services;
-using Blog.Settings;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 
 namespace Blog
 {
@@ -42,6 +41,16 @@ namespace Blog
                     .ConfigureApiBehaviorOptions(options => options.SuppressModelStateInvalidFilter = true)
                     .AddJsonOptions(x => x.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingDefault);
 
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new OpenApiInfo
+                {
+                    Title = "Blog Api",
+                    Version = "v1",
+                    Description = "Welcome to \"Blog Api\", a .NET project to learn Api development"
+                });
+            });
+
             ConfigureAuthentication(services);
         }
 
@@ -50,6 +59,8 @@ namespace Blog
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+                app.UseSwagger();
+                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Blog v1"));
             }
 
             app.UseResponseCompression();

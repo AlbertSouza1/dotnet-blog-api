@@ -21,6 +21,7 @@
     <PackageReference Include="PgsqlDataTypes" Version="1.0.0" />
     <PackageReference Include="SecureIdentity" Version="1.0.3" />
     <PackageReference Include="supabase-csharp" Version="0.6.2" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="5.5.1" />
   </ItemGroup>
 
 </Project>
