@@ -1,10 +1,7 @@
 using System;
-using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
 using System.Security.Claims;
 using System.Text;
-using System.Threading.Tasks;
 using Blog.Extensions;
 using Blog.Models;
 using Microsoft.IdentityModel.Tokens;
@@ -13,10 +10,10 @@ namespace Blog.Services
 {
     public class TokenService
     {
-        public string GenerateToken(User user)
+        public string GenerateToken(User user, string jwtKey)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
-            var key = Encoding.ASCII.GetBytes(Environment.GetEnvironmentVariable("JWTKEY"));
+            var key = Encoding.ASCII.GetBytes(jwtKey);
             var claims = user.GetClaims();
             var tokenDescriptor = new SecurityTokenDescriptor()
             {

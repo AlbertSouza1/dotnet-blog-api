@@ -13,6 +13,7 @@ using Blog.ViewModels.Accounts;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using SecureIdentity.Password;
 
 namespace Blog.Controllers
@@ -71,7 +72,10 @@ namespace Blog.Controllers
         }
 
         [HttpPost("v1/login")]
-        public async Task<IActionResult> Login([FromBody] LoginViewModel model, [FromServices] BlogDataContext context, [FromServices] TokenService tokenService)
+        public async Task<IActionResult> Login([FromBody] LoginViewModel model,
+                                               [FromServices] BlogDataContext context,
+                                               [FromServices] TokenService tokenService,
+                                               [FromServices] IConfiguration configuration)
         {
             if (!ModelState.IsValid)
                 return BadRequest(new ResultViewModel<List<string>>(ModelState.GetErrors()));
@@ -89,7 +93,8 @@ namespace Blog.Controllers
                 if (!PasswordHasher.Verify(user.PasswordHash, model.Password))
                     return StatusCode(401, new ResultViewModel<string>(error: "Email or password invalid."));
 
-                var token = _tokenService.GenerateToken(user);
+                var jwtKey = configuration.GetValue<string>("JwtKey");
+                var token = _tokenService.GenerateToken(user, jwtKey);
 
                 return Ok(new ResultViewModel<string>(data: token));
             }

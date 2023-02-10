@@ -1,4 +1,3 @@
-using System;
 using System.Text;
 using System.Text.Json.Serialization;
 using Blog.Data;
@@ -8,6 +7,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
@@ -17,6 +17,13 @@ namespace Blog
 {
     public class Startup
     {
+        public IConfiguration Configuration { get; set; }
+
+        public Startup(IConfiguration configuration)
+        {
+            Configuration = configuration;
+        }
+
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc(options =>
@@ -24,7 +31,8 @@ namespace Blog
                 options.SuppressAsyncSuffixInActionNames = false;
             });
 
-            services.AddDbContext<BlogDataContext>(options => options.UseNpgsql(Environment.GetEnvironmentVariable("SUPABASE_CONNECTION_STRING")));
+            var connectionString = Configuration.GetConnectionString("DefaultConnection");
+            services.AddDbContext<BlogDataContext>(options => options.UseNpgsql(connectionString));
             services.AddTransient<TokenService>();
             services.AddTransient<EmailService>();
 
@@ -85,9 +93,9 @@ namespace Blog
             });
         }
 
-        private static void ConfigureAuthentication(IServiceCollection services)
+        private void ConfigureAuthentication(IServiceCollection services)
         {
-            var key = Encoding.ASCII.GetBytes(Environment.GetEnvironmentVariable("JWTKEY"));
+            var key = Encoding.ASCII.GetBytes(Configuration.GetValue<string>("JwtKey"));
             services.AddAuthentication(x =>
             {
                 x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
