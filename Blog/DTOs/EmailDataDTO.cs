@@ -18,7 +18,7 @@ namespace Blog.DTOs
             ToName = toName;
             Subject = subject;
             Body = body;
-            FromEmail = "email@balta.io";
+            FromEmail = "csharp.ps@gmail.com";
             FromName = "Curso ASP.NET";
         }
 

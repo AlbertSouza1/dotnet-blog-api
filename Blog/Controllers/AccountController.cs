@@ -15,6 +15,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using SecureIdentity.Password;
+using Blog.Settings;
 
 namespace Blog.Controllers
 {
@@ -27,7 +28,10 @@ namespace Blog.Controllers
             => _tokenService = tokenService;
 
         [HttpPost("v1/users/register")]
-        public async Task<IActionResult> CreateAccount([FromBody] RegisterViewModel model, [FromServices] BlogDataContext context, [FromServices] EmailService emailService)
+        public async Task<IActionResult> CreateAccount([FromBody] RegisterViewModel model,
+                                                       [FromServices] BlogDataContext context,
+                                                       [FromServices] EmailService emailService,
+                                                       [FromServices] IConfiguration configuration)
         {
             if (!ModelState.IsValid)
                 return BadRequest(new ResultViewModel<string>(ModelState.GetErrors()));
@@ -51,7 +55,11 @@ namespace Blog.Controllers
                                                  toName: user.Name,
                                                  subject: "Welcome to our blog!",
                                                  body: $"Your password is <strong>{password}.</strong>");
-                emailService.Send(emailData);
+
+                var smtp = new SmtpConfiguration();
+                configuration.GetSection("Smtp").Bind(smtp);
+
+                emailService.Send(emailData, smtp);
 
                 return CreatedAtAction(actionName: nameof(GetUserName),
                                            routeValues: new { id = user.Id },

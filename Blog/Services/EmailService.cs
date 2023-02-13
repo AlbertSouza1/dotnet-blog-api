@@ -2,16 +2,17 @@ using System;
 using System.Net;
 using System.Net.Mail;
 using Blog.DTOs;
+using Blog.Settings;
 
 namespace Blog.Services
 {
     public class EmailService
     {
-        public bool Send(EmailDataDTO emailData)
+        public bool Send(EmailDataDTO emailData, SmtpConfiguration smtp)
         {
-            var smtpClient = new SmtpClient(Environment.GetEnvironmentVariable("SMTP_HOST"), Int32.Parse(Environment.GetEnvironmentVariable("SMTP_PORT")));
+            var smtpClient = new SmtpClient(smtp.Host, smtp.Port);
 
-            smtpClient.Credentials = new NetworkCredential(Environment.GetEnvironmentVariable("SMTP_USERNAME"), Environment.GetEnvironmentVariable("SMTP_PASSWORD"));
+            smtpClient.Credentials = new NetworkCredential(smtp.UserName, smtp.Password);
             smtpClient.DeliveryMethod = SmtpDeliveryMethod.Network;
             smtpClient.EnableSsl = true;
 
@@ -25,7 +26,7 @@ namespace Blog.Services
 
             try
             {
-                //smtpClient.Send(mail);
+                smtpClient.Send(mail);
                 return true;
             }
             catch

@@ -12,8 +12,6 @@ namespace Blog
 
         public static IHostBuilder CreateHostBuilder(string[] args)
         {
-            DotNetEnv.Env.Load();
-
             return Host.CreateDefaultBuilder(args)
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
