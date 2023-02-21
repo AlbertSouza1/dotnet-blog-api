@@ -1,8 +1,6 @@
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Blog.Data;
-using Blog.Extensions;
 using Blog.Models;
 using Blog.ViewModels;
 using Blog.ViewModels.Categories;
@@ -10,6 +8,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
+using ModelStateExtension.Extensions;
 
 namespace Blog.Controllers
 {

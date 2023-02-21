@@ -5,7 +5,6 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Blog.Data;
 using Blog.DTOs;
-using Blog.Extensions;
 using Blog.Models;
 using Blog.Services;
 using Blog.ViewModels;
@@ -16,6 +15,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using SecureIdentity.Password;
 using Blog.Settings;
+using ModelStateExtension.Extensions;
 
 namespace Blog.Controllers
 {
